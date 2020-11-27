@@ -14,7 +14,7 @@ class Bridge():
             print(port.device)
             print(port.description)
 
-            if 'arduino' in port.description.lower():
+            if 'arduino' or 'dispositivo' in port.description.lower():
                 self.port_name=port.device
         print(f'Connecting to: {self.port_name}')
 
