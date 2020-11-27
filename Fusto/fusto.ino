@@ -1,8 +1,7 @@
 
 int level = A0;
 char printBuffer[128];
-//char printState[128];
-char id_barrel[6]="A001\n";
+char id_barrel='A';
 int RED=2;
 int GREEN=3;
 int BLUE=4;
@@ -24,7 +23,6 @@ void setup()
   pinMode(GREEN,OUTPUT);
   pinMode(BLUE,OUTPUT);
   pinMode(BUTTON,INPUT);
-  Serial.print(id_barrel);
   iState=0;
   
 }
@@ -45,8 +43,7 @@ void loop()
         digitalWrite(BLUE,LOW);
         break;
       case 1:
-      //Qui ci andrà l'invio dell'ID
-        
+        Serial.print(id_barrel);
         digitalWrite(GREEN,LOW);
         digitalWrite(RED,LOW);
         digitalWrite(BLUE,LOW);
