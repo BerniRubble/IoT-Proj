@@ -42,7 +42,7 @@ void loop()
       digitalWrite(BLUE, LOW);
       break;
     case 1:
-      //Serial.print(id_barrel);
+      Serial.print(id_barrel);
       digitalWrite(GREEN, LOW);
       digitalWrite(RED, LOW);
       digitalWrite(BLUE, LOW);
@@ -78,36 +78,17 @@ void loop()
 
 int computeFutureState(int iState, int buttonValue, int value) {
 
-  /*
-    if (iState == 0 && buttonValue == LOW)iFutureState = 0;
-    else if (iState == 0 && buttonValue == HIGH)iFutureState = 1;
-    else if (iState == 1 && value > 280 && buttonValue == HIGH)iFutureState = 2;
-    else if (iState == 1 && value < 280 && value > 150 && buttonValue == HIGH)iFutureState = 3;
-    else if (iState == 1 && value < 150 && buttonValue == HIGH)iFutureState = 4;
-    else if (iState == 2 && buttonValue == HIGH)iFutureState == 2;
-    else if (iState == 2 && value > 280 && buttonValue == LOW)iFutureState = 2;
-    else if (iState == 2 && value < 280 && value > 150 && buttonValue == LOW)iFutureState = 3;
-    else if (iState == 3 && buttonValue == HIGH)iFutureState = 3;
-    else if (iState == 3 && value < 280 && value > 150 && buttonValue == LOW)iFutureState = 3;
-    else if (iState == 3 && value < 150 && buttonValue == LOW)iFutureState = 4;
-    else if (iState == 4 && value < 150 && buttonValue == LOW)iFutureState = 4;
-    else if (iState == 4 && value < 150 && buttonValue == HIGH)iFutureState = 0;
-  */
-
-
   if (iState == 0 && buttonValue == LOW)iFutureState = 0;
   else if (iState == 0 && buttonValue == HIGH && (millis() - t) > debounce_delay) {
     iFutureState = 1;
-    Serial.print(id_barrel);
+    //Serial.print(id_barrel);
     t = millis();
   }
-  else if (iState == 1 && value > 280)iFutureState = 2;
-  else if (iState == 1 && value < 280 && value > 100)iFutureState = 3;
-  else if (iState == 1 && value < 150)iFutureState = 4;
-  //else if (iState == 2 && value > 280)iFutureState = 2; //si può togliere?
-  else if (iState == 2 && value < 280 && value > 150)iFutureState = 3;
-  //else if (iState == 3 && value < 280 && value > 150)iFutureState = 3; //si può togliere?
-  else if (iState == 3 && value < 150)iFutureState = 4;
+  else if (iState == 1 && value > 210)iFutureState = 2;
+  else if (iState == 1 && value < 210 && value > 100)iFutureState = 3;
+  else if (iState == 1 && value < 100)iFutureState = 4;
+  else if (iState == 2 && value < 210 && value > 100)iFutureState = 3;
+  else if (iState == 3 && value < 100)iFutureState = 4;
   else if (iState == 4 && buttonValue == HIGH && (millis() - t) > debounce_delay) {
     iFutureState = 0;
     t = millis();
