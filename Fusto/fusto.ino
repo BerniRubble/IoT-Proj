@@ -2,7 +2,7 @@
 #define MIN 150
 #define MAX 210
 
-char id_barrel = 'A';
+char id_barrel[3] = "A01";
 
 //Pin
 int level = A0;
@@ -53,7 +53,10 @@ void loop()
       digitalWrite(BLUE, LOW);
       break;
     case 1:
-      Serial.print(id_barrel);
+      Serial.write('C');
+      Serial.write(id_barrel);
+      Serial.write('\n');
+      
       digitalWrite(GREEN, LOW);
       digitalWrite(RED, LOW);
       digitalWrite(BLUE, LOW);
@@ -61,7 +64,9 @@ void loop()
     case 2:
       if((millis()-t2)>print_state_delay)
       {
-        Serial.print('2');
+        Serial.write('S');
+        Serial.write('2');
+        Serial.write('\n');
         t2=millis();
       }
       
@@ -74,7 +79,9 @@ void loop()
       //Serial.print('3');
       if((millis()-t2)>print_state_delay)
       {
-        Serial.print('3');
+        Serial.write('S');
+        Serial.write('3');
+        Serial.write('\n');
         t2=millis();
       }
       digitalWrite(RED, HIGH);
@@ -85,7 +92,9 @@ void loop()
       //Serial.print('4');
       if((millis()-t2)>print_state_delay)
       {
-        Serial.print('4');
+        Serial.write('S');
+        Serial.write('4');
+        Serial.write('\n');
         t2=millis();
       }
       digitalWrite(GREEN, LOW);
