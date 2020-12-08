@@ -1,5 +1,6 @@
 import serial
 import serial.tools.list_ports
+import requests
 
 class Bridge():
 
@@ -25,17 +26,44 @@ class Bridge():
             self.ser = None
 
         self.inputBuffer=[]
+        #self.inputBufferBarrels=[]
 
     def setup(self):
         #Funzione da aggiornare ogni volta che si aggiunge un setup
         self.setupSerial()
+    def useIData(self):
+        print(f"\nHo ricevuto un id {self.inputBuffer[1]+self.inputBuffer[2]+self.inputBuffer[3]}")
+        requests.post("http://127.0.0.1:8080/", data=self.inputBuffer[1]+self.inputBuffer[2]+self.inputBuffer[3])
+    def useLevelData(self):
+        print(f"\nHo ricevuto i dati sul livello {self.inputBuffer[1]}")
+
     def loop(self):
+        id_packet=False #Variabile che mi dice se il pacchetto che sto leggedo è un ID
+        state_packet=False #Come sopra ma con lo stato
         while(True):
             if self.ser is not None:
                 if self.ser.in_waiting>0:
-                    self.inputBuffer.append(self.ser.read(1))
-                    for character in self.inputBuffer:
-                        print(character.decode('utf-8'))
+                    lastchar=self.ser.read(1).decode('utf-8')
+
+                    if lastchar =='C' and id_packet is False and state_packet is False:
+                        id_packet=True
+                    elif lastchar=='S' and id_packet is False and state_packet is False:
+                        state_packet=True
+
+                    if lastchar=='\n':
+                        if id_packet is True:
+                            self.useIData()
+                            self.inputBuffer=[]
+                            id_packet=False
+                        elif state_packet is True:
+                            self.useLevelData()
+                            self.inputBuffer = []
+                            state_packet =False
+                    else:
+                        #E' inutile salvarsi nel buffer il carattere terminatore
+                        self.inputBuffer.append(lastchar)
+
+
 
 
 if __name__ == '__main__':
