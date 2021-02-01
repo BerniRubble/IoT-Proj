@@ -35,7 +35,12 @@ class Bridge():
         print(f"\nHo ricevuto un id {self.inputBuffer[1]+self.inputBuffer[2]+self.inputBuffer[3]}")
         requests.post("http://127.0.0.1:8080/", data=self.inputBuffer[1]+self.inputBuffer[2]+self.inputBuffer[3])
     def useLevelData(self):
-        print(f"\nHo ricevuto i dati sul livello {self.inputBuffer[1]}")
+        print(f"\nId_fusto: {self.inputBuffer[1]+self.inputBuffer[2]+self.inputBuffer[3]}")
+        print(f"\nHo ricevuto i dati sul livello {self.inputBuffer[4]}")
+        requests.post("http://127.0.0.1:8080/level", data=self.inputBuffer[1]+self.inputBuffer[2]+self.inputBuffer[3]+self.inputBuffer[4])
+        #1,2,3 è l'ID
+        #4 è lo stato
+        #Da collegare con il server
 
     def loop(self):
         id_packet=False #Variabile che mi dice se il pacchetto che sto leggedo è un ID
