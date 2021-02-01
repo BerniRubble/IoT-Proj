@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 //Valori min e max degli intervalli
 #define MIN 150
 #define MAX 210
@@ -6,11 +5,6 @@
 char id_barrel[3] = "A01";
 
 //Pin
-=======
-#define MIN 130
-#define MAX 210
-
->>>>>>> Stashed changes
 int level = A0;
 int RED = 2;
 int GREEN = 3;
@@ -20,11 +14,7 @@ int BUTTON = 7;
 //Var globali codice
 long t = 0;
 long debounce_delay = 200;
-<<<<<<< Updated upstream
 long print_state_delay=5000;
-=======
-long print_state_delay = 5000;
->>>>>>> Stashed changes
 long t2=0;
 
 int value = 0; // valore sensore
@@ -75,6 +65,7 @@ void loop()
       if((millis()-t2)>print_state_delay)
       {
         Serial.write('S');
+        Serial.write(id_barrel);
         Serial.write('2');
         Serial.write('\n');
         t2=millis();
@@ -90,6 +81,7 @@ void loop()
       if((millis()-t2)>print_state_delay)
       {
         Serial.write('S');
+        Serial.write(id_barrel);
         Serial.write('3');
         Serial.write('\n');
         t2=millis();
@@ -99,27 +91,19 @@ void loop()
       setColor(0, 50, 0);
       break;
     case 4:
-<<<<<<< Updated upstream
       //Serial.print('4');
       if((millis()-t2)>print_state_delay)
       {
         Serial.write('S');
+        Serial.write(id_barrel);
         Serial.write('4');
         Serial.write('\n');
         t2=millis();
-=======
-      if ((millis() - t2) > print_state_delay){
-        Serial.print('4');
-        t2 = millis();
->>>>>>> Stashed changes
       }
       digitalWrite(GREEN, LOW);
       digitalWrite(RED, HIGH);
       digitalWrite(BLUE, LOW);
-<<<<<<< Updated upstream
       
-=======
->>>>>>> Stashed changes
       break;
   }
 
@@ -136,6 +120,7 @@ int computeFutureState(int iState, int buttonValue, int value) {
   if (iState == 0 && buttonValue == LOW)iFutureState = 0;
   else if (iState == 0 && buttonValue == HIGH && (millis() - t) > debounce_delay) {
     iFutureState = 1;
+    //Serial.print(id_barrel);
     t = millis();
   }
   else if (iState == 1 && value > MAX)iFutureState = 2;
