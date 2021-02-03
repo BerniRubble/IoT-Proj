@@ -6,10 +6,11 @@ from threading import Thread
 
 app=Flask(__name__)
 buffer=['']
-columns=['id', 'locale', 'anno', 'mese', 'giorno', 'ora', 'stato']
+columns=['id', 'locale', 'data' , 'time' ,'stato']
+path_file="C:/Users/manub/Desktop/Università/MODENA/iot_3D/PROGETTO/Python/Server/dataset/dataset.csv"
 dataset=pd.DataFrame(columns=columns)
 
-
+'''
 @app.route('/', methods=['GET'])
 def home():
     print(buffer[0])
@@ -20,16 +21,24 @@ def updateBuffer():
     buffer[0]=request.get_data().decode("utf-8")
     return 'OK'
     #render_template('id_page.html', buffer=buffer[0])
-
+'''
 @app.route('/level', methods=['POST'])
 def levelManager():
     req=request.get_data().decode("utf-8")
     level=int(req[3])
     timestamp=datetime.datetime.now()
 
-    tupla= [req[0]+req[1]+req[2],'theHome',timestamp.year,timestamp.month,timestamp.day,timestamp.hour,(level-1)]
+    try:
+        dataset=pd.read_csv(path_file, sep=';')
+    except:
+        dataset = pd.DataFrame(columns=columns)
+
+    timestamp.time()
+
+    tupla= [req[0]+req[1]+req[2],'theHome',timestamp.date(),timestamp.time(),(level-1)]
     dataset.loc[len(dataset)] =tupla
 
+    dataset.to_csv(path_file,sep=';', index=False)
     print(dataset)
     if level == 2:
         print("Sono nel primo livello")
