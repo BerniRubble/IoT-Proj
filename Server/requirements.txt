@@ -4,3 +4,6 @@ pandas
 python-telegram-bot
 pystan
 fbprophet
+plotly
+notebook
+ipywidgets
