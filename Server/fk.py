@@ -8,8 +8,8 @@ app=Flask(__name__)
 buffer=['']
 columns=['id', 'birra' ,'locale', 'anno', 'mese', 'giorno' ,'ora','minuti','secondi','stato']
 columns2=['id','birra','locale']
-path_file="C:/Users/manub/Desktop/Università/MODENA/iot_3D/PROGETTO/Python/Server/dataset/dataset.csv"
-path_file2="C:/Users/manub/Desktop/Università/MODENA/iot_3D/PROGETTO/Python/Server/dataset/birre_locali.csv"
+path_file="C:/Users/benef/Desktop/UNIMORE/Progetto IoT/IoT-Proj/Server/dataset/dataset.csv"
+path_file2="C:/Users/benef/Desktop/UNIMORE/Progetto IoT/IoT-Proj/Server/dataset/birre_locali.csv"
 dataset=pd.DataFrame(columns=columns)
 birre_locali=pd.DataFrame(columns=columns2)
 
