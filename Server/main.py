@@ -5,9 +5,9 @@ from telegram.replykeyboardmarkup import ReplyKeyboardMarkup
 from config import BOTKEY
 import datetime
 from fk import FlaskThread, path_file, columns, Thread
-import pandas as pd
 import time
 from multiprocessing import Process
+import fbProphet
 
 
 #ths = []
@@ -168,5 +168,6 @@ if __name__=='__main__':
     thread=FlaskThread("flask")
     thread.start()
     botMain()
+
 
 
