@@ -1,11 +1,10 @@
 from fbprophet import Prophet
 import fk
 import pandas as pd
-from fbprophet.plot import plot_plotly, plot_components_plotly
-import sklearn
 
 #leggo il dataset
 df = fk.leggiDataset()
+df.head()
 
 #fitto il dataset con prophet
 m = Prophet()
@@ -15,8 +14,6 @@ m.fit(df)
 future = m.make_future_dataframe(periods=365)
 future.tail()
 
-forecast = m.predict(future)
-'''
 #modeling holiday
 #creo un dataset per ogni festività che voglio analizzare
 saintpatrick = pd.DataFrame({
@@ -50,6 +47,6 @@ forecast = m.fit(df).predict(future)
 #in teoria dovrebbe farmi un grafico e una nuova tabella
 forecast = forecast[(forecast['saintpatrick'] + forecast['chrismtas'] + forecast['newyearseve']).abs() > 0][
         ['ds', 'saintpatrick', 'christmas', 'newyearseve']][-10:]
-        
-'''
+
+fig = m.plot_components(forecast)
 

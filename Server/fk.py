@@ -8,38 +8,48 @@ app=Flask(__name__)
 buffer=['']
 columns=['id', 'birra' ,'locale', 'anno', 'mese', 'giorno' ,'ora','minuti','secondi','stato']
 columns2=['id','birra','locale']
-path_file="C:/Users/benef/Desktop/UNIMORE/Progetto IoT/IoT-Proj/Server/dataset/dataset.csv"
-path_file2="C:/Users/benef/Desktop/UNIMORE/Progetto IoT/IoT-Proj/Server/dataset/birre_locali.csv"
+path_file="C:/Users/manub/Desktop/Università/MODENA/iot_3D/PROGETTO/Python/Server/dataset/dataset.csv"
+path_file2="C:/Users/manub/Desktop/Università/MODENA/iot_3D/PROGETTO/Python/Server/dataset/birre_locali.csv"
 dataset=pd.DataFrame(columns=columns)
 birre_locali=pd.DataFrame(columns=columns2)
 
-'''
-@app.route('/', methods=['GET'])
-def home():
-    print(buffer[0])
-    return render_template('home.html', buffer=buffer[0])
 
-@app.route('/', methods=['POST'])
-def updateBuffer():
-    buffer[0]=request.get_data().decode("utf-8")
-    return 'OK'
-    #render_template('id_page.html', buffer=buffer[0])
-'''
 def leggiDataset():
     try:
         dataset=pd.read_csv(path_file, sep=';')
-        birre_locali=pd.read_csv(path_file2, sep=';')
+
     except:
         dataset = pd.DataFrame(columns=columns)
+
+    try:
+        birre_locali = pd.read_csv(path_file2, sep=';')
+    except:
         birre_locali = pd.DataFrame(columns=columns2)
 
     return dataset, birre_locali
+
+@app.route('/newBarrel', methods=['POST'])
+def n_barrel():
+    return render_template('newLocal.html', n_barrel=int(request.form['nBarrell']))
+
+@app.route('/insertNewBarrel', methods=['POST'])
+def new_beer():
+    dataset,birre_locali=leggiDataset()
+    n_barrel=request.form['n_barrel']
+
+    for i in range(int(n_barrel)):
+        tup=[request.form[f"id_barrel{i}"],request.form[f"beer{i}"],request.form[f"local{i}"]]
+        birre_locali.loc[len(birre_locali)]=tup
+    birre_locali.to_csv(path_file2, sep=';', index=False)
+    return render_template('barrelSuccess.html')
+
 
 @app.route('/', methods=['GET'])
 def homeDash():
     dataset,birre_locali=leggiDataset()
 
     locali=dataset['locale'].unique()
+    print(locali)
     return render_template('home.html', locali=locali)
 
 @app.route('/dashboard', methods=['POST'])
@@ -60,6 +70,12 @@ def dashboardManager():
 
 
     return render_template('dashboard.html', result_birre=result_birre, locale=locale)
+
+@app.route('/ordina', methods=['POST'])
+def oderBeer():
+    birra=request.form['birra']
+    return render_template('newOrder.html',birra=birra)
+
 @app.route('/level', methods=['POST'])
 def levelManager():
     req=request.get_data().decode("utf-8")
@@ -105,4 +121,4 @@ class FlaskThread(Thread):
         self.nome=nome
         #self.durata=durata
     def run(self):
-        app.run(host='127.0.0.1', port=8080)
+        app.run(host='0.0.0.0', port=8080)
