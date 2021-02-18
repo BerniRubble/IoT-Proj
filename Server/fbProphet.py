@@ -1,52 +1,94 @@
 from fbprophet import Prophet
-import fk
 import pandas as pd
+#from fbprophet.plot import plot_plotly, plot_components_plotly, plot
+import matplotlib.pyplot as plt
 
-#leggo il dataset
-df = fk.leggiDataset()
-df.head()
+columns=['id', 'birra' ,'locale', 'anno', 'mese', 'giorno' ,'ora','minuti','secondi','stato']
+columns2=['id','birra','locale']
+path_file="C:/Users/manub/Desktop/Università/MODENA/iot_3D/PROGETTO/Python/Server/dataset/dataset.csv"
+path_file2="C:/Users/manub/Desktop/Università/MODENA/iot_3D/PROGETTO/Python/Server/dataset/birre_locali.csv"
 
-#fitto il dataset con prophet
-m = Prophet()
-m.fit(df)
-
-#estende al futuro per 365 giorni
-future = m.make_future_dataframe(periods=365)
-future.tail()
-
-#modeling holiday
-#creo un dataset per ogni festività che voglio analizzare
-saintpatrick = pd.DataFrame({
-  'holiday': 'Saint Patrick',
-  'ds': pd.to_datetime(['2016-03-17', '2017-03-17', '2018-03-17', '2019-03-17', '2020-03-17', '2021-03-17']),
-  'lower_window': 0,
-  'upper_window': 1,
-})
-
-christmas = pd.DataFrame({
-  'holiday': 'Christmas',
-  'ds': pd.to_datetime(['2016-12-25', '2017-12-25', '2018-12-25', '2019-12-25', '2020-12-25', '2021-12-25']),
-  'lower_window': 0,
-  'upper_window': 1,
-})
-
-newyearseve = pd.DataFrame({
-  'holiday': 'New Years Eve',
-  'ds': pd.to_datetime(['2016-12-31', '2017-12-31', '2018-12-31', '2019-12-31', '2020-12-31', '2021-12-31']),
-  'lower_window': 0,
-  'upper_window': 1,
-})
-
-holidays = pd.concat((saintpatrick, christmas, newyearseve))
-
-#faccio previsioni al futuro per quelle festività
-m = Prophet(holidays=holidays)
-forecast = m.fit(df).predict(future)
+def leggi_beer_dataset(id):
+  try:
+    beer_dataset = pd.read_csv(
+      f"C:/Users/manub/Desktop/Università/MODENA/iot_3D/PROGETTO/Python/Server/dataset/birre/{id}.csv", sep=';')
+  except:
+    beer_dataset = pd.DataFrame(columns=['ds', 'y'])
+  return beer_dataset
 
 
-#in teoria dovrebbe farmi un grafico e una nuova tabella
-forecast = forecast[(forecast['saintpatrick'] + forecast['chrismtas'] + forecast['newyearseve']).abs() > 0][
-        ['ds', 'saintpatrick', 'christmas', 'newyearseve']][-10:]
+def fbP():
+  try:
+    dataset = pd.read_csv(path_file, sep=';')
 
-fig = m.plot_components(forecast)
+  except:
+    dataset = pd.DataFrame(columns=columns)
+
+  try:
+    birre_locali = pd.read_csv(path_file2, sep=';')
+  except:
+    birre_locali = pd.DataFrame(columns=columns2)
+
+
+
+
+  locali=birre_locali['locale'].unique()
+
+
+  for locale in locali:
+    beer_dataset = pd.DataFrame(columns=['ds', 'y'])
+    loc = dataset[dataset.locale == locale]
+    ids = loc['id'].unique()
+    for id in ids:
+      birra=loc[loc.id == id]
+      years=birra['anno'].unique()
+      for y in years:
+        year = birra[birra.anno == y]
+        months = year['mese'].unique()
+        for m in months:
+          month = year[year.mese == m]
+          days = month['giorno'].unique()
+          for d in days:
+            day = month[month.giorno == d]
+            n_birre_tot=0
+
+            for i in range(len(day)):
+              if (i+1) < len(day):
+                if day['stato'].iloc[i] != day['stato'].iloc[i+1]:
+                    n_birre_tot =n_birre_tot+1
+
+            #n_birre_tot = len(day[day.stato == 3])
+            tupla = [f"{y}-{m}-{d}",n_birre_tot]
+
+
+            beer_dataset.loc[len(beer_dataset)] = tupla
+            beer_dataset.drop_duplicates(inplace=True)
+            beer_dataset.to_csv(f"C:/Users/manub/Desktop/Università/MODENA/iot_3D/PROGETTO/Python/Server/dataset/birre/{id}.csv", sep=';', index=False)
+
+
+def make_image():
+  try:
+    dataset = pd.read_csv(path_file, sep=';')
+
+  except:
+    dataset = pd.DataFrame(columns=columns)
+
+
+
+
+
+  ids = dataset['id'].unique()
+
+  for id in ids:
+    df = leggi_beer_dataset(id)
+    m = Prophet(daily_seasonality=True)
+    m.fit(df)
+    future = m.make_future_dataframe(periods=365)
+    forecast = m.predict(future)
+    m.plot_components(forecast)
+    plt.savefig(f"C:/Users/manub/Desktop/Università/MODENA/iot_3D/PROGETTO/Python/Server/static/images/{id}.png")
+
+
+
+
 

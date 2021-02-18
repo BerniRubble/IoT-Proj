@@ -1,7 +1,7 @@
 from flask import Flask, render_template,request
 import pandas as pd
 import datetime
-import numpy as np
+import fbProphet
 from threading import Thread
 
 app=Flask(__name__)
@@ -43,17 +43,19 @@ def new_beer():
     birre_locali.to_csv(path_file2, sep=';', index=False)
     return render_template('barrelSuccess.html')
 
-
 @app.route('/', methods=['GET'])
 def homeDash():
     dataset,birre_locali=leggiDataset()
-
     locali=dataset['locale'].unique()
-    print(locali)
+    fbProphet.fbP()
+
+
+    #print(locali)
     return render_template('home.html', locali=locali)
 
 @app.route('/dashboard', methods=['POST'])
 def dashboardManager():
+    fbProphet.make_image()
     locale=request.form['local']
     dataset,birre_locali=leggiDataset()
     dataset=dataset[dataset.locale==locale]
@@ -68,8 +70,14 @@ def dashboardManager():
 
         result_birre.append({'birra':tmp['birra'].iloc[-1], 'livello':stato})
 
+        ids=dataset['id'].unique()
+        birre=[]
 
-    return render_template('dashboard.html', result_birre=result_birre, locale=locale)
+        for id in ids:
+            br=birre_locali[birre_locali.id == id]
+            birre.append({'id': id, 'birra': br['birra'].iloc[0]})
+
+    return render_template('dashboard.html', result_birre=result_birre, locale=locale,  birre=birre)
 
 @app.route('/ordina', methods=['POST'])
 def oderBeer():
@@ -91,8 +99,6 @@ def levelManager():
 
     timestamp.time()
 
-    #print(birre_locali.columns[0])
-
     tupla= [req[0]+req[1]+req[2],'birra','default',timestamp.year,timestamp.month, timestamp.day,timestamp.hour,timestamp.minute, timestamp.second,(level-1)]
     for i in range(len(birre_locali)):
         if birre_locali['id'].iloc[i] == tupla[0]:
@@ -101,10 +107,10 @@ def levelManager():
 
     dataset.loc[len(dataset)] =tupla
 
-
     dataset.to_csv(path_file,sep=';', index=False)
-    print(dataset)
 
+    #Le righe di codice successive mi servono solamente come controllo
+    print(dataset)
     if level == 2:
         print("Sono nel primo livello")
     elif level== 3:
@@ -112,13 +118,11 @@ def levelManager():
     elif level==4:
         print("Sono nel terzo livello")
 
-
     return 'OK'
 
 class FlaskThread(Thread):
     def __init__(self, nome):
         Thread.__init__(self)
         self.nome=nome
-        #self.durata=durata
     def run(self):
         app.run(host='0.0.0.0', port=8080)
