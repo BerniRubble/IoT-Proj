@@ -49,8 +49,6 @@ def homeDash():
     locali=dataset['locale'].unique()
     fbProphet.fbP()
 
-
-    #print(locali)
     return render_template('home.html', locali=locali)
 
 @app.route('/dashboard', methods=['POST'])
@@ -100,6 +98,7 @@ def levelManager():
     timestamp.time()
 
     tupla= [req[0]+req[1]+req[2],'birra','default',timestamp.year,timestamp.month, timestamp.day,timestamp.hour,timestamp.minute, timestamp.second,(level-1)]
+    #il livello è sottratto di 1 solo per chiarezza di lettura ed avere unqa corrispondeza tra primo livello=1, secondo livello=2, terzo livello=3
     for i in range(len(birre_locali)):
         if birre_locali['id'].iloc[i] == tupla[0]:
             tupla[2]=birre_locali['locale'].iloc[i]

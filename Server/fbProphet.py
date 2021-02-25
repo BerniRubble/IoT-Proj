@@ -1,6 +1,5 @@
 from fbprophet import Prophet
 import pandas as pd
-#from fbprophet.plot import plot_plotly, plot_components_plotly, plot
 import matplotlib.pyplot as plt
 
 columns=['id', 'birra' ,'locale', 'anno', 'mese', 'giorno' ,'ora','minuti','secondi','stato']
@@ -30,8 +29,6 @@ def fbP():
     birre_locali = pd.DataFrame(columns=columns2)
 
 
-
-
   locali=birre_locali['locale'].unique()
 
 
@@ -52,12 +49,14 @@ def fbP():
             day = month[month.giorno == d]
             n_birre_tot=0
 
+            #conto quante volte volte è avvenuto un cambiamento di stato, se cambia vuol dire che la birra è stata consumata
+            #questo mi serve per prevedere i consumi
             for i in range(len(day)):
               if (i+1) < len(day):
                 if day['stato'].iloc[i] != day['stato'].iloc[i+1]:
                     n_birre_tot =n_birre_tot+1
 
-            #n_birre_tot = len(day[day.stato == 3])
+
             tupla = [f"{y}-{m}-{d}",n_birre_tot]
 
 
@@ -74,13 +73,11 @@ def make_image():
     dataset = pd.DataFrame(columns=columns)
 
 
-
-
-
   ids = dataset['id'].unique()
 
   for id in ids:
     df = leggi_beer_dataset(id)
+    df.dropna(axis=0, inplace=True)
     m = Prophet(daily_seasonality=True)
     m.fit(df)
     future = m.make_future_dataframe(periods=365)

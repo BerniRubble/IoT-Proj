@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap.min.css')}}">
+    <title>NewBarrel</title>
+</head>
+<body class="bg-dark">
+<div class="container-fluid bg-dark">
+    <div class='row'>
+        <div class="col">
+            <div class="row">
+                <h1 class="text-warning">Inserisci informazioni relative ai nuovi fusti</h1>
+            </div>
+            <form method="post" action="/insertNewBarrel" id="form1">
+                <input type="hidden" value="{{n_barrel}}" name="n_barrel">
+                {%for i in range(n_barrel):%}
+                <div class="row border-bottom border-warning">
+                    <div class="col">
+                        <input  type="text" placeholder="Inserisci l'id del fusto" name="id_barrel{{i}}">
+                    </div>
+                    <div class="col">
+                        <input  type="text" placeholder="nome del locale" name="local{{i}}">
+                    </div>
+                    <div class="col">
+                        <input  type="text" placeholder="nome birra" name="beer{{i}}">
+                    </div>
+                </div>
+
+                {%endfor%}
+
+
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <input class="btn btn-warning" type="submit" value="Invia" form="form1">
+        </div>
+    </div>
+</div>
+
+</body>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+</html>

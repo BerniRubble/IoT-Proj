@@ -15,6 +15,7 @@ class localThread(Thread):
 
 
     def run(self):
+
         print("Thread partito")
         exit_process = False
         while exit_process==False:
@@ -35,6 +36,7 @@ class localThread(Thread):
                                 cont = 0
                                 # Questo ciclo mi serve per controllare che
                                 # le dieci rilevazioni precedenti siano nello stesso stato e quindi deve andare in offerta
+                                #Utilizziamo solo 10 rilevazioni per questione di simulazione
                                 for i in range(11):
                                     if i == 0 or i == 1:
                                         pass

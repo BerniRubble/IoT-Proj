@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap.min.css')}}">
+    <title>DashBoard</title>
+</head>
+<body class="bg-dark">
+
+
+    <div class="container-fluid ">
+        <div class="row">
+            <div class="col">
+                <h1 class="text-info bg-dark text-center">Sei nella dashboard del locale: {{locale}}</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col bg-secondary">
+                <h3 class="text-body"></h3>
+            </div>
+        </div>
+        <div class="row ">
+            <div class="col">
+                <h3 class="text-info bg-dark">Birre e stato:</h3>
+            </div>
+            <div class="col align-content-end">
+                <form method="get" action="/">
+                    <input class="btn btn-warning" type="submit" value="Torna alla home">
+                </form>
+            </div>
+
+
+        </div>
+        <div class="row">
+            <div class="col bg-secondary">
+                <h3 class="text-body"></h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                {%for el in result_birre:%}
+                <div class="row border-right border-secondary">
+                    <div class="col">
+                        <h4 class="text-warning bg-dark">{{el['birra']}} : {{el['livello']}}</h4>
+                    </div>
+                </div>
+                {%endfor%}
+            </div>
+            <div class="col border-left border-secondary">
+                <div class="row">
+                    <div class="col">
+                        <h3 class="text-info bg-dark">Vuoi ordinare nuova birra?</h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <form class="d-flex" method="post" action="/ordina" name="beerOrder">
+                            <input class="form-control m-auto" list="birre" name="birra" placeholder="Birra">
+                            <datalist id="birre">
+                            {%for el in result_birre:%}
+                                <option value="{{el['birra']}}"></option>
+                            {%endfor%}
+                            </datalist>
+                            <input class="btn btn-warning" type="submit" value="Ordina">
+                        </form>
+                    </div>
+                </div>
+                <div class="row">
+                    <div>
+                        <h3 class="text-body"></h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <h3 class="text-info bg-dark">Grafico andamento consumi:</h3>
+                    </div>
+                </div>
+                {%for br in birre:%}
+                <div class="row">
+                    <div class="col">
+                        <h4 class="text-warning">{{br['birra']}}</h4>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <img src="static/images/{{br['id']}}.png">
+                    </div>
+                </div>
+                {%endfor%}
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
+</body>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+
+</html>

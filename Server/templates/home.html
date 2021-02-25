@@ -1,10 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap.min.css')}}">
+    <title>HomeDash</title>
 </head>
-<body>
-<h1>Ho ricevuto {{buffer}}</h1>
+<body class="bg-dark">
+<div class="container-fluid bg-dark">
+    <div class="row">
+        <div class="col">
+            <h1 class="text-info bg-dark">Benvenuto nella pagina di scelta della dashboard</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <h3 class="text-warning">Di quale locale vuoi vedere le informazioni?</h3>
+            <div class="row border-bottom border-warning">
+                <div class="col">
+                    <form class="d-flex" method="post" action="/dashboard" name="localInfo">
+                        <input list="locals" name="local" placeholder="Local">
+                        <datalist id="locals">
+                        {%for local in locali%}
+                            <option value="{{local}}"></option>
+                        {%endfor%}
+                        </datalist>
+                        <input class="btn btn-warning" type="submit" value="Invia">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <h1 class="text-info bg-dark">Inserisci i nuovi fusti arrivati al tuo locale</h1>
+        </div>
+        <div class="col">
+            <form class="d-flex" method="post" action="/newBarrel" >
+                <input type="text" placeholder="Numero di fusti da inserire" name="nBarrell">
+                <input class="btn btn-warning" type="submit" value="Vai all'inserimento">
+            </form>
+        </div>
+    </div>
+
+</div>
+
 </body>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+
 </html>

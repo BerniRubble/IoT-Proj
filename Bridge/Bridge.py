@@ -26,46 +26,32 @@ class Bridge():
             self.ser = None
 
         self.inputBuffer=[]
-        #self.inputBufferBarrels=[]
+
 
     def setup(self):
         #Funzione da aggiornare ogni volta che si aggiunge un setup
         self.setupSerial()
-    '''
-    def useIData(self):
-        print(f"\nHo ricevuto un id {self.inputBuffer[1]+self.inputBuffer[2]+self.inputBuffer[3]}")
-    '''
+
     def useLevelData(self):
         print(f"\nId_fusto: {self.inputBuffer[1]+self.inputBuffer[2]+self.inputBuffer[3]}")
         print(f"\nHo ricevuto i dati sul livello {self.inputBuffer[4]}")
         requests.post("http://iotproj.ddns.net/level", data=self.inputBuffer[1]+self.inputBuffer[2]+self.inputBuffer[3]+self.inputBuffer[4])
         #1,2,3 è l'ID
         #4 è lo stato
-        #Da collegare con il server
+
 
     def loop(self):
-        #id_packet=False #Variabile che mi dice se il pacchetto che sto leggedo è un ID
-        state_packet=False #Come sopra ma con lo stato
+        state_packet=False
         while(True):
             if self.ser is not None:
                 if self.ser.in_waiting>0:
                     lastchar=self.ser.read(1).decode('utf-8')
-                    '''
-                    if lastchar =='C' and id_packet is False and state_packet is False:
-                        id_packet=True
-                    '''
-                    #and id_packet is False
+
                     if lastchar=='S' and state_packet is False:
                         state_packet=True
 
                     if lastchar=='\n':
-                        '''
-                        if id_packet is True:
-                            self.useIData()
-                            self.inputBuffer=[]
-                            id_packet=False
-                        el
-                        '''
+
                         if state_packet is True:
                             self.useLevelData()
                             self.inputBuffer = []

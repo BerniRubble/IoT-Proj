@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap.min.css')}}">
+    <title>New Order</title>
+</head>
+<body class="bg-dark">
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <h1 class="text-success bg-dark"> Ordine di {{birra}} effettuato!</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <form method="get" action="/">
+                <input class="btn btn-warning" type="submit" value="Torna alla home">
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+</html>
